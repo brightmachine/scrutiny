@@ -1,0 +1,35 @@
+{
+  "name": "brightmachine/scrutiny",
+  "type": "library",
+  "description": "Scrutiny checks over your environment to make sure your app is running as it should be – use pingdom to check it",
+  "keywords": [
+    "laravel",
+    "laravel 5",
+    "monitoring",
+    "pingdom"
+  ],
+  "homepage": "https://github.com/brightmachine/scrutiny",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Kelvin Jones",
+      "email": "kelvin@brightmachine.co.uk"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Scrutiny\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ScrutinyTest\\": "tests/"
+    }
+  },
+  "require": {
+    "laravel/framework": ">=5.1"
+  },
+  "require-dev": {
+    "orchestra/testbench": "~3.0"
+  }
+}
