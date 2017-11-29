@@ -18,8 +18,9 @@ All probes fall under the namespace `Scrutiny\Probes`:
 - `ConnectsToDatabase`
 - `ConnectsToHttp`
 - `PhpExtensionLoaded`
-
 - `ExecutableIsInstalled`
+- `Callback`
+
 - `LaravelScheduleIsRunning`
 - `LaravelQueueIsRunning`
 - `LaravelHasNoFailedJobs`
@@ -62,6 +63,29 @@ class AppServiceProvider extends ServiceProvider
 }
 
 ```
+
+----
+
+## Custom probes
+
+Use the callback probe to add your own custom checks.
+
+If a check should be skipped, throw a `\Scrutiny\ProbeSkippedException` and to fail
+a check, throw any other kind of `Exception`:
+
+```php
+<?php
+\Scrutiny\ProbeManager::configure()
+    ->callback('my custom check', function () {
+        if (should_i_skip_the_check()) {
+            throw new \Scrutiny\ProbeSkippedException('check skipped');
+        }
+        
+        if (should_i_fail_the_check()) {
+            throw new \Exception('check failed');
+        }
+    });
+``` 
 
 ----
 

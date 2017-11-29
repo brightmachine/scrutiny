@@ -3,6 +3,7 @@
 namespace Scrutiny;
 
 use Scrutiny\Probes\AvailableDiskSpace;
+use Scrutiny\Probes\Callback;
 use Scrutiny\Probes\ConnectsToDatabase;
 use Scrutiny\Probes\ConnectsToHttp;
 use Scrutiny\Probes\ExecutableIsInstalled;
@@ -94,9 +95,16 @@ class ProbeManager
         return $this;
     }
 
-    public function custom($customProbe)
+    /**
+     * @param string $probeName
+     * @param callable $callback
+     * @return $this
+     */
+    public function callback($probeName, callable $callback)
     {
-        $this->probes->push($customProbe);
+        $this->probes->push(
+            new Callback($probeName, $callback)
+        );
 
         return $this;
     }
