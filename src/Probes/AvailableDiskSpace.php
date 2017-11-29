@@ -4,17 +4,20 @@ namespace Scrutiny\Probes;
 
 use Scrutiny\Probe;
 use Scrutiny\ProbeSkippedException;
+use Scrutiny\Support\CommandLineTrait;
 
-class AvailableFreeDiskSpace implements Probe
+class AvailableDiskSpace implements Probe
 {
+    use CommandLineTrait;
+
     /**
      * @var string
      */
-    private $diskFolder;
+    protected $diskFolder;
     /**
      * @var int|float must be less than 100
      */
-    private $minPercentage;
+    protected $minPercentage;
 
     public function __construct($minPercentage, $diskFolder = null)
     {
@@ -72,9 +75,12 @@ class AvailableFreeDiskSpace implements Probe
 
     protected function getAvailableDiskSpace()
     {
-        $folder = escapeshellarg($this->diskFolder);
+        $command = sprintf('%s -k %s | %s -vi filesystem',
+            $this->escapeShellArgument($this->findExecutable('df')),
+            $this->escapeShellArgument($this->diskFolder),
+            $this->escapeShellArgument($this->findExecutable('grep'))
+        );
 
-        $command = sprintf('/bin/df -k %s | /bin/grep -vi filesystem', $folder);
         exec($command, $output);
 
         $cols = preg_split('/\s+/', $output[0]);

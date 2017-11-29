@@ -13,7 +13,7 @@ class ConnectsToDatabase implements Probe
      *
      * @var null|string
      */
-    private $connectionName;
+    protected $connectionName;
 
     public function __construct($connectionName = null)
     {

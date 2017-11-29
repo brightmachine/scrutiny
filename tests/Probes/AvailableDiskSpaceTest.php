@@ -2,17 +2,15 @@
 
 namespace ScrutinyTest\Probes;
 
-use Scrutiny\Probes\AvailableFreeDiskSpace;
-use Scrutiny\Probes\ConnectsToDatabase;
-use Scrutiny\ProbeSkippedException;
+use Scrutiny\Probes\AvailableDiskSpace;
 use ScrutinyTest\TestCase;
 
-class AvailableFreeDiskSpaceTest extends TestCase
+class AvailableDiskSpaceTest extends TestCase
 {
     /** @test */
     public function passesIfMoreThanMinimumSpaceAvailable()
     {
-        $check = new ConfigurableAvailableFreeDiskSpace(10);
+        $check = new ConfigurableAvailableDiskSpace(10);
         $check->availableDiskSpace = 20;
         $check->check();
         $this->assertTrue(true);
@@ -25,7 +23,7 @@ class AvailableFreeDiskSpaceTest extends TestCase
      */
     public function skipsIfOsNotSupported()
     {
-        $check = new ConfigurableAvailableFreeDiskSpace(10);
+        $check = new ConfigurableAvailableDiskSpace(10);
         $check->supportedOs = false;
         $check->check();
     }
@@ -37,7 +35,7 @@ class AvailableFreeDiskSpaceTest extends TestCase
      */
     public function skipsIfMinimumPercentageTooLow()
     {
-        $check = new ConfigurableAvailableFreeDiskSpace(0);
+        $check = new ConfigurableAvailableDiskSpace(0);
         $check->check();
     }
 
@@ -48,7 +46,7 @@ class AvailableFreeDiskSpaceTest extends TestCase
      */
     public function skipsIfMinimumPercentageTooHigh()
     {
-        $check = new ConfigurableAvailableFreeDiskSpace(100);
+        $check = new ConfigurableAvailableDiskSpace(100);
         $check->check();
     }
 
@@ -59,13 +57,13 @@ class AvailableFreeDiskSpaceTest extends TestCase
      */
     public function failsIfAvailablePercentageLowerThanMinimum()
     {
-        $check = new ConfigurableAvailableFreeDiskSpace(20);
+        $check = new ConfigurableAvailableDiskSpace(20);
         $check->availableDiskSpace = 15;
         $check->check();
     }
 }
 
-class ConfigurableAvailableFreeDiskSpace extends AvailableFreeDiskSpace
+class ConfigurableAvailableDiskSpace extends AvailableDiskSpace
 {
     public $supportedOs = true;
     public $availableDiskSpace = 10;

@@ -11,7 +11,7 @@ class CheckProbesController extends Controller
     /**
      * @var CheckProbes
      */
-    private $checkProbes;
+    protected $checkProbes;
 
     public function __construct(CheckProbes $checkProbes)
     {

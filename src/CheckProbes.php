@@ -7,7 +7,7 @@ class CheckProbes
     /**
      * @var ProbeManager
      */
-    private $probeManager;
+    protected $probeManager;
 
     public function __construct(ProbeManager $probeManager)
     {

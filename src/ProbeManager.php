@@ -2,8 +2,10 @@
 
 namespace Scrutiny;
 
-use Scrutiny\Probes\AvailableFreeDiskSpace;
+use Scrutiny\Probes\AvailableDiskSpace;
 use Scrutiny\Probes\ConnectsToDatabase;
+use Scrutiny\Probes\ConnectsToHttp;
+use Scrutiny\Probes\ExecutableIsInstalled;
 use Scrutiny\Probes\PhpExtensionLoaded;
 
 class ProbeManager
@@ -42,23 +44,51 @@ class ProbeManager
      * @param string|null $diskFolder path to folder that disk contains
      * @return $this
      */
-    public function availableFreeDiskSpace($minPercentage, $diskFolder = null)
+    public function availableDiskSpace($minPercentage, $diskFolder = null)
     {
         $this->probes->push(
-            new AvailableFreeDiskSpace($minPercentage, $diskFolder)
+            new AvailableDiskSpace($minPercentage, $diskFolder)
         );
 
         return $this;
     }
 
     /**
-     * @param $extensionName
+     * @param string $extensionName
      * @return $this
      */
     public function phpExtensionLoaded($extensionName)
     {
         $this->probes->push(
             new PhpExtensionLoaded($extensionName)
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param string $executableName
+     * @return $this
+     */
+    public function executableIsInstalled($executableName)
+    {
+        $this->probes->push(
+            new ExecutableIsInstalled($executableName)
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param string $url
+     * @param array $params
+     * @param string $verb
+     * @return $this
+     */
+    public function connectsToHttp($url, $params = array(), $verb = 'GET')
+    {
+        $this->probes->push(
+            new ConnectsToHttp($url, $params, $verb)
         );
 
         return $this;

@@ -13,7 +13,7 @@ class PhpExtensionLoaded implements Probe
     /**
      * @var string
      */
-    private $extensionName;
+    protected $extensionName;
 
     public function __construct($extensionName)
     {

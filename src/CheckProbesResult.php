@@ -123,7 +123,7 @@ class CheckProbesResult
         return ceil(($this->passed()->count() / $total) * 100);
     }
 
-    private function probeName($probe)
+    protected function probeName($probe)
     {
         if ($probe instanceof NamedProbe) {
             return $probe->name();
@@ -136,7 +136,7 @@ class CheckProbesResult
      * @param \Exception $e
      * @return mixed
      */
-    private function exceptionMessage(\Exception $e)
+    protected function exceptionMessage(\Exception $e)
     {
         return str_replace('100%', '100 percent', $e->getMessage());
     }

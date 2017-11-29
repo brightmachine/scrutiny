@@ -14,12 +14,12 @@ environment is configured and running as planned.
 
 All probes fall under the namespace `Scrutiny\Probes`:
 
+- `AvailableDiskSpace`
 - `ConnectsToDatabase`
-- `ExecutableIsInstalled`
-- `AvailableFreeDiskSpace`
-- `AvailableFreeMemory`
-- `PhpExtensionLoaded`
 - `ConnectsToHttp`
+- `PhpExtensionLoaded`
+
+- `ExecutableIsInstalled`
 - `LaravelScheduleIsRunning`
 - `LaravelQueueIsRunning`
 - `LaravelHasNoFailedJobs`
@@ -37,12 +37,12 @@ Some system checks may not be supported on Windows.
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Scrutiny\ProbeManager;
 
 class AppServiceProvider extends ServiceProvider 
 {
     public function boot()
     {
+        // …
         $this->configureScrutinyProbes();
     }
     
@@ -52,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
     
     protected function configureScrutinyProbes()
     {
-        ProbeManager::configure()
+        \Scrutiny\ProbeManager::configure()
             ->connectsToDatabase()
             ->executableIsInstalled('composer.phar')
             ->custom(
@@ -69,6 +69,23 @@ class AppServiceProvider extends ServiceProvider
 
 Configure a new check in pingdom with the following setting:
 
-1. Add an `uptime check` in pingdom to hit `https://yourdomain.com/~scrutiny/check-probes` where yourdomain.com is your domain
+1. Add an `uptime check` in pingdom to hit `https://yourdomain.com/~scrutiny/check-probes` where yourdomain.com is your production domain
 2. Scrutiny will return an HTTP status of `590 Some Tests Failed` when something is awry – this is a custom code 
 
+
+----
+
+## Contributing
+
+Any contribution is received with humility and gratitude.
+
+We're not striding for perfection, but gradual improvements. 
+This is the spirit in which contributions will be considered.
+
+**Process**:
+
+1. Fork, change, create pull-request
+2. Tell us why/how your PR will benefit the project 
+3. We may ask you for clarification, but we'll quickly let you know whether or not it's likely your change will be merged
+
+Xx
