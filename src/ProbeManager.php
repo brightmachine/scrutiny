@@ -8,6 +8,7 @@ use Scrutiny\Probes\ConnectsToDatabase;
 use Scrutiny\Probes\ConnectsToHttp;
 use Scrutiny\Probes\ExecutableIsInstalled;
 use Scrutiny\Probes\PhpExtensionLoaded;
+use Scrutiny\Probes\QueueIsRunning;
 
 class ProbeManager
 {
@@ -96,6 +97,21 @@ class ProbeManager
     }
 
     /**
+     * @param int $maxHandleTime
+     * @param string|null $queue – must be defined in `config/queue.php`
+     * @param string|null $connection
+     * @return $this
+     */
+    public function queueIsRunning($maxHandleTime = 300, $queue = null, $connection = null)
+    {
+        $this->probes->push(
+            new QueueIsRunning($maxHandleTime, $queue, $connection)
+        );
+
+        return $this;
+    }
+
+    /**
      * @param string $probeName
      * @param callable $callback
      * @return $this
@@ -115,5 +131,15 @@ class ProbeManager
     public function probes()
     {
         return $this->probes;
+    }
+
+    /**
+     * @param string $identifier
+     * @return $this
+     */
+    public function named($identifier)
+    {
+        $this->probes->last()->name($identifier);
+        return $this;
     }
 }

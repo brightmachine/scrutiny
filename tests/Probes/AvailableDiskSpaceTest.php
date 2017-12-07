@@ -2,6 +2,7 @@
 
 namespace ScrutinyTest\Probes;
 
+use Scrutiny\Measurements\Percentage;
 use Scrutiny\Probes\AvailableDiskSpace;
 use ScrutinyTest\TestCase;
 
@@ -12,8 +13,9 @@ class AvailableDiskSpaceTest extends TestCase
     {
         $check = new ConfigurableAvailableDiskSpace(10);
         $check->availableDiskSpace = 20;
-        $check->check();
-        $this->assertTrue(true);
+        $measurement = $check->check();
+
+        $this->assertTrue($measurement instanceof Percentage);
     }
 
     /**

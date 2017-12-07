@@ -2,20 +2,22 @@
 
 namespace Scrutiny\Probes;
 
-use Scrutiny\NamedProbe;
 use Scrutiny\Probe;
 
-class Callback implements Probe, NamedProbe
+class Callback implements Probe
 {
     /**
      * @var string
      */
-    private $probeName;
+    protected $probeName;
 
     /**
      * @var callable
      */
-    private $callback;
+    protected $callback;
+
+    /** @var  string|null */
+    protected $nameIdentifier;
 
     public function __construct($probeName, callable $callback)
     {
@@ -23,9 +25,22 @@ class Callback implements Probe, NamedProbe
         $this->callback = $callback;
     }
 
-    public function name()
+    public function name($identifier = null)
     {
-        return $this->probeName;
+        if ($identifier) {
+            $this->nameIdentifier = $identifier;
+        }
+
+        return "Callback: ".($this->nameIdentifier ?: $this->probeName);
+    }
+
+    public function id()
+    {
+        if ($this->nameIdentifier) {
+            return $this->name();
+        }
+
+        return sprintf("probe:%s,named:%s", class_basename($this), $this->probeName);
     }
 
     public function check()

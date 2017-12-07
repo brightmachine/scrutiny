@@ -2,6 +2,8 @@
 
 namespace Scrutiny\Probes;
 
+use Scrutiny\Measurements\Percentage;
+use Scrutiny\MeasurementThresholdException;
 use Scrutiny\Probe;
 use Scrutiny\ProbeSkippedException;
 use Scrutiny\Support\CommandLineTrait;
@@ -14,15 +16,42 @@ class AvailableDiskSpace implements Probe
      * @var string
      */
     protected $diskFolder;
+
     /**
      * @var int|float must be less than 100
      */
     protected $minPercentage;
 
+    /** @var  string|null */
+    protected $nameIdentifier;
+
     public function __construct($minPercentage, $diskFolder = null)
     {
         $this->minPercentage = $minPercentage;
         $this->diskFolder = $diskFolder ? $diskFolder : base_path();
+    }
+
+    public function id()
+    {
+        if ($this->nameIdentifier) {
+            return $this->name();
+        }
+
+        return sprintf("probe:%s,folder:%s", class_basename($this), $this->diskFolder);
+    }
+
+    public function name($identifier = null)
+    {
+        if ($identifier) {
+            $this->nameIdentifier = $identifier;
+        }
+
+        $defaultIdentifier = $this->diskFolder == base_path() ? 'current disk' : $this->diskFolder;
+
+        return sprintf(
+            "Available Disk Space: %s",
+            $this->nameIdentifier ?: $defaultIdentifier
+        );
     }
 
     public function check()
@@ -31,11 +60,16 @@ class AvailableDiskSpace implements Probe
 
         $percentageAvailable = $this->getAvailableDiskSpace();
 
-        if ($percentageAvailable >= $this->minPercentage) {
-            return;
+        $measurement = new Percentage($percentageAvailable, $this->minPercentage, 'Available disk space');
+
+        if ($measurement->aboveThreshold()) {
+            return $measurement;
         }
 
-        throw new \Exception("only $percentageAvailable% available, less than minimum of {$this->minPercentage}%");
+        throw new MeasurementThresholdException(
+            "only $percentageAvailable% available, less than minimum of {$this->minPercentage}%",
+            $measurement
+        );
     }
 
     protected function supportedOs()

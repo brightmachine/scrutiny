@@ -2,6 +2,8 @@
 
 namespace Scrutiny;
 
+use Scrutiny\Support\AvailabilityMonitorValidator;
+
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     public function register()
@@ -13,6 +15,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $this->loadRoutes();
         $this->configureViews();
+        $this->configureCache();
     }
 
     protected function loadRoutes()
@@ -30,5 +33,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             realpath(__DIR__.'/resources/views'),
             'scrutiny'
         );
+    }
+
+    protected function configureCache()
+    {
+        config([
+            'cache.stores.scrutiny-file' => [
+                'driver' => 'file',
+                'path'   => storage_path('app/scrutiny'),
+            ]
+        ]);
     }
 }

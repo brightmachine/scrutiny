@@ -15,15 +15,15 @@ environment is configured and running as planned.
 All probes fall under the namespace `Scrutiny\Probes`:
 
 - `AvailableDiskSpace`
+- `Callback`
 - `ConnectsToDatabase`
 - `ConnectsToHttp`
-- `PhpExtensionLoaded`
 - `ExecutableIsInstalled`
-- `Callback`
+- `PhpExtensionLoaded`
+- `QueueIsRunning`
 
-- `LaravelScheduleIsRunning`
-- `LaravelQueueIsRunning`
-- `LaravelHasNoFailedJobs`
+- `ScheduleIsRunning`
+- `HasNoFailedJobs`
 
 Each check has its own parameters and can be used multiple times.
 

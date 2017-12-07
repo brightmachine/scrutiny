@@ -15,9 +15,32 @@ class ConnectsToDatabase implements Probe
      */
     protected $connectionName;
 
+    /** @var  string|null */
+    protected $nameIdentifier;
+
     public function __construct($connectionName = null)
     {
-        $this->connectionName = $connectionName;
+        $this->connectionName = $connectionName ?: config('database.default');
+    }
+
+    public function id()
+    {
+        if ($this->nameIdentifier) {
+            return $this->name();
+        }
+
+        return sprintf("probe:%s,connection:%s", class_basename($this), $this->connectionName);
+    }
+
+    public function name($identifier = null)
+    {
+        if ($identifier) {
+            $this->nameIdentifier = $identifier;
+        }
+
+        $defaultIdentifier = $this->connectionName;
+
+        return sprintf("Connects to Database: %s", $this->nameIdentifier ?: $defaultIdentifier);
     }
 
     public function check()

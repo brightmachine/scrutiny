@@ -2,60 +2,54 @@
 
 namespace Scrutiny;
 
-class CheckProbesResult
-{
-    /** @var \Illuminate\Support\Collection */
-    protected $all;
-    /** @var \Illuminate\Support\Collection */
-    protected $passed;
-    /** @var \Illuminate\Support\Collection */
-    protected $skipped;
-    /** @var \Illuminate\Support\Collection */
-    protected $failed;
+use Illuminate\Support\Collection;
 
-    public function __construct()
+class CheckProbesResult extends Collection
+{
+    /** @var int  */
+    protected $time;
+
+    public function __construct($items = [])
     {
-        $this->all = collect();
-        $this->passed = collect();
-        $this->skipped = collect();
-        $this->failed = collect();
+        $this->time = time();
+        parent::__construct($items);
     }
 
-    public function addPassed(Probe $probe)
+    public function addPassed(Probe $probe, Measurement $measurement)
     {
-        $this->all->push([
-            'icon'   => '👌',
-            'status' => 'passed',
-            'name'   => $this->probeName($probe),
+        $this->push([
+            'icon'        => '👌',
+            'status'      => 'passed',
+            'id'          => $this->probeId($probe),
+            'name'        => $this->probeName($probe),
+            'measurement' => $measurement,
+            'time'        => $this->time,
         ]);
     }
 
     public function addSkipped(Probe $probe, \Exception $e)
     {
-        $this->all->push([
+        $this->push([
             'icon'    => '🙈',
             'status'  => 'skipped',
+            'id'      => $this->probeId($probe),
             'name'    => $this->probeName($probe),
             'message' => $this->exceptionMessage($e),
+            'time'    => $this->time,
         ]);
     }
 
     public function addFailed(Probe $probe, \Exception $e)
     {
-        $this->all->push([
-            'icon'    => '💩',
-            'status'  => 'failed',
-            'name'    => $this->probeName($probe),
-            'message' => $this->exceptionMessage($e),
+        $this->push([
+            'icon'        => '💩',
+            'status'      => 'failed',
+            'id'          => $this->probeId($probe),
+            'name'        => $this->probeName($probe),
+            'message'     => $this->exceptionMessage($e),
+            'measurement' => $e instanceof MeasurementThresholdException ? $e->measurement() : null,
+            'time'        => $this->time,
         ]);
-    }
-
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function all()
-    {
-        return $this->all;
     }
 
     /**
@@ -63,7 +57,7 @@ class CheckProbesResult
      */
     public function passed()
     {
-        return $this->all->filter(function (array $v) {
+        return $this->filter(function (array $v) {
             return $v['status'] == 'passed';
         });
     }
@@ -73,7 +67,7 @@ class CheckProbesResult
      */
     public function skipped()
     {
-        return $this->all->filter(function (array $v) {
+        return $this->filter(function (array $v) {
             return $v['status'] == 'skipped';
         });
     }
@@ -83,7 +77,7 @@ class CheckProbesResult
      */
     public function failed()
     {
-        return $this->all->filter(function (array $v) {
+        return $this->filter(function (array $v) {
             return $v['status'] == 'failed';
         });
     }
@@ -119,17 +113,26 @@ class CheckProbesResult
 
     public function percentagePassed()
     {
-        $total = $this->all->count() - $this->skipped()->count();
+        $total = $this->count() - $this->skipped()->count();
         return ceil(($this->passed()->count() / $total) * 100);
     }
 
-    protected function probeName($probe)
+    /**
+     * @return int
+     */
+    public function time()
     {
-        if ($probe instanceof NamedProbe) {
-            return $probe->name();
-        }
+        return $this->time;
+    }
 
-        return ucwords(snake_case(class_basename($probe), ' '));
+    protected function probeId(Probe $probe)
+    {
+        return hash('sha256', $probe->id());
+    }
+
+    protected function probeName(Probe $probe)
+    {
+        return $probe->name();
     }
 
     /**

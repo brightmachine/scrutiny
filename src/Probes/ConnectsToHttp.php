@@ -20,11 +20,43 @@ class ConnectsToHttp implements Probe
      */
     protected $verb;
 
+    /** @var  string|null */
+    protected $nameIdentifier;
+
     public function __construct($url, $params = array(), $verb = 'GET')
     {
         $this->url = $url;
         $this->params = $params;
         $this->verb = $verb;
+    }
+
+    public function id()
+    {
+        if ($this->nameIdentifier) {
+            return $this->name();
+        }
+
+        return sprintf(
+            "probe:%s,url:%s,params:%s,verb:%s",
+            class_basename($this),
+            $this->reportUrl(),
+            $this->params ? http_build_query($this->params) : '',
+            $this->verb
+        );
+    }
+
+    public function name($identifier = null)
+    {
+        if ($identifier) {
+            $this->nameIdentifier = $identifier;
+        }
+
+        $defaultIdentifier = $this->verb.' '.$this->reportUrl();
+
+        return sprintf(
+            "Connects to Http: %s",
+            $this->nameIdentifier ?: $defaultIdentifier
+        );
     }
 
     public function check()
@@ -95,7 +127,7 @@ class ConnectsToHttp implements Probe
 
         $httpParts = explode(' ', $httpResponse, 3);
 
-        return (int) $httpParts[1];
+        return (int)$httpParts[1];
     }
 
     protected function reportUrl()
