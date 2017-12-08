@@ -4,7 +4,6 @@ namespace Scrutiny\Probes;
 
 use Illuminate\Cache\Repository;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Queue\SyncQueue;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Queue;
 use Scrutiny\Measurements\Duration;
@@ -139,10 +138,10 @@ class QueueIsRunning implements Probe
     {
         $job = (new QueueIsRunningJob($this->maxHandleTime, $this->cacheKey))
             ->onConnection($this->connection)
-            ->onQueue($this->queue)
-        ;
+            ->onQueue($this->queue);
 
         $this->dispatch($job);
+
         $this->putCachedJob([
             'timeDispatched' => time(),
             'timeHandled'    => null,
@@ -227,7 +226,9 @@ class QueueIsRunning implements Probe
 
     protected function skipIfQueueNotSupported()
     {
-        if (Queue::connection($this->connection) instanceof SyncQueue) {
+        $connectionName = Queue::getName($this->connection);
+
+        if ($connectionName == 'sync') {
             throw new ProbeSkippedException("Sync queue not supported");
         }
     }
