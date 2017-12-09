@@ -26,6 +26,11 @@ class QueueIsRunning implements Probe
     protected $queue;
 
     /**
+     * @var null
+     */
+    protected $connection;
+
+    /**
      * @var string|null
      */
     protected $nameIdentifier;
@@ -39,10 +44,6 @@ class QueueIsRunning implements Probe
      * @var Repository
      */
     protected $cacheStore;
-    /**
-     * @var null
-     */
-    private $connection;
 
     public function __construct($maxHandleTime = 300, $queue = null, $connection = null)
     {
@@ -70,12 +71,12 @@ class QueueIsRunning implements Probe
         if (!$this->queue && !$this->connection) {
             $defaultIdentifier = 'default';
         } else {
-            $queue = $this->queue ?: 'default';
-            $defaultIdentifier = "$queue queue";
-
-            if ($this->connection) {
-                $defaultIdentifier .= " on {$this->connection}";
-            }
+            // we have a configured queue or connection
+            $defaultIdentifier = collect()
+                ->push($this->queue ? "{$this->queue} queue": null)
+                ->push($this->connection ? "{$this->connection} connection": null)
+                ->filter()
+                ->implode(' on ');
         }
 
         return sprintf("Queue is Running: %s", $this->nameIdentifier ?: $defaultIdentifier);

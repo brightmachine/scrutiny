@@ -3,6 +3,26 @@
 Scrutiny helps your laravel project ensure that its current server
 environment is configured and running as planned.
 
+## Installation
+
+To install through composer, add the following to your `composer.json` file:
+
+```json
+{
+    "require": {
+        "brightmachine/scrutiny": "~1.0"
+    }
+}
+```
+
+And then run `composer install` from the terminal.
+
+### Quick Installation
+
+The installation intructions can be simplified using the following:
+
+    composer require "brightmachine/scrutiny=~1.0"
+
 ## How it works
 
 1. In `AppServiceProvider::boot()`, configure the probes to check for all the things your environment needs in order to run 
@@ -21,11 +41,9 @@ All probes fall under the namespace `Scrutiny\Probes`:
 - `ExecutableIsInstalled`
 - `PhpExtensionLoaded`
 - `QueueIsRunning`
-
 - `ScheduleIsRunning`
-- `HasNoFailedJobs`
 
-Each check has its own parameters and can be used multiple times.
+Each check has its own parameters and can be used multiple times where it makes sense.
 
 Some system checks may not be supported on Windows.
 
@@ -112,4 +130,4 @@ This is the spirit in which contributions will be considered.
 2. Tell us why/how your PR will benefit the project 
 3. We may ask you for clarification, but we'll quickly let you know whether or not it's likely your change will be merged
 
-Xx
+😘 Xx

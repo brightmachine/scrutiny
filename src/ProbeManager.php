@@ -9,6 +9,7 @@ use Scrutiny\Probes\ConnectsToHttp;
 use Scrutiny\Probes\ExecutableIsInstalled;
 use Scrutiny\Probes\PhpExtensionLoaded;
 use Scrutiny\Probes\QueueIsRunning;
+use Scrutiny\Probes\ScheduleIsRunning;
 
 class ProbeManager
 {
@@ -107,6 +108,26 @@ class ProbeManager
         $this->probes->push(
             new QueueIsRunning($maxHandleTime, $queue, $connection)
         );
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function scheduleIsRunning()
+    {
+        static $added;
+
+        if ($added) {
+            return $this;
+        }
+
+        $this->probes->push(
+            new ScheduleIsRunning()
+        );
+
+        $added = true;
 
         return $this;
     }
