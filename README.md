@@ -19,9 +19,29 @@ And then run `composer install` from the terminal.
 
 ### Quick Installation
 
-The installation intructions can be simplified using the following:
+The installation instructions can be simplified using the following:
 
     composer require "brightmachine/scrutiny=~1.0"
+
+### Add the Service Provider
+
+Open `config/app.php` and the scrutiny service provider to :
+
+```php
+<?php
+return [
+    // …
+
+    'providers' => [
+        // …
+        Scrutiny\ServiceProvider::class,
+    ],
+	
+	// …
+];
+```
+
+You are all setup!
 
 ## How it works
 
