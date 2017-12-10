@@ -1,7 +1,21 @@
 # Scrutiny
 
-Scrutiny helps your laravel project ensure that its current server
-environment is configured and running as planned.
+Scrutiny helps your Laravel 5.1+ project ensure that its current server environment is configured and running as planned.
+
+## Problem
+
+Have you ever been in the situation where you've moved servers and forgotten to:
+
+1. Get your queue running?
+2. Add the cron job to run your schedule?
+3. Install an obscure program that your reporting uses once a month?
+4. Enable a PHP extension that you need for an API?
+
+This is the scenario Scrutiny was built to address – use the availability monitor you have setup 
+(like pingdom) to also monitor other important aspects of your environment.
+
+This means your availability monitor notifies you of any problems with your server environment setup
+instead of waiting for your clients or customers to tell you something is wrong.
 
 ## Installation
 
@@ -41,7 +55,7 @@ return [
 ];
 ```
 
-You are all setup!
+You are all setup – next step it to add your probes!
 
 ## How it works
 
