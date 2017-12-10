@@ -10,6 +10,7 @@ use Scrutiny\Measurements\Duration;
 use Scrutiny\MeasurementThresholdException;
 use Scrutiny\Probe;
 use Scrutiny\Probes\QueueIsRunning\QueueIsRunningJob;
+use Scrutiny\Probes\QueueIsRunning\SelfHandlingQueueIsRunningJob;
 use Scrutiny\ProbeSkippedException;
 
 class QueueIsRunning implements Probe
@@ -137,9 +138,13 @@ class QueueIsRunning implements Probe
 
     protected function dispatchPendingJob()
     {
-        $job = (new QueueIsRunningJob($this->maxHandleTime, $this->cacheKey))
-            ->onConnection($this->connection)
-            ->onQueue($this->queue);
+        if (interface_exists('Illuminate\Contracts\Bus\SelfHandling')) {
+            $job = new SelfHandlingQueueIsRunningJob($this->maxHandleTime, $this->cacheKey);
+        } else {
+            $job = new QueueIsRunningJob($this->maxHandleTime, $this->cacheKey);
+        }
+
+        $job->onConnection($this->connection)->onQueue($this->queue);
 
         $this->dispatch($job);
 
