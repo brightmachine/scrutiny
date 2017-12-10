@@ -94,9 +94,9 @@ class AppServiceProvider extends ServiceProvider
         \Scrutiny\ProbeManager::configure()
             ->connectsToDatabase()
             ->executableIsInstalled('composer.phar')
-            ->custom(
-                new MyCustomProbe()
-            );
+            ->queueIsRunning(30, 'high')
+            ->queueIsRunning(60, 'low')
+            ;
     }
 }
 
