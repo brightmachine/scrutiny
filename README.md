@@ -2,6 +2,10 @@
 
 Scrutiny helps your Laravel 5.1+ project ensure that its current server environment is configured and running as planned.
 
+[![Latest Stable Version](https://poser.pugx.org/brightmachine/scrutiny/v/stable)](https://packagist.org/packages/brightmachine/scrutiny)
+[![Total Downloads](https://poser.pugx.org/brightmachine/scrutiny/downloads)](https://packagist.org/packages/brightmachine/scrutiny)
+[![License](https://poser.pugx.org/brightmachine/scrutiny/license)](https://packagist.org/packages/brightmachine/scrutiny)
+
 ## Problem
 
 Have you ever been in the situation where you've moved servers and forgotten to:
