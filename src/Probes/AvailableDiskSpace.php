@@ -109,7 +109,7 @@ class AvailableDiskSpace implements Probe
 
     protected function getAvailableDiskSpace()
     {
-        $command = sprintf('%s -k %s | %s -vi filesystem',
+        $command = sprintf('%s -k %s -P | %s -vi filesystem',
             $this->escapeShellArgument($this->findExecutable('df')),
             $this->escapeShellArgument($this->diskFolder),
             $this->escapeShellArgument($this->findExecutable('grep'))
