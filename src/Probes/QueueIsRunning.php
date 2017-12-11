@@ -138,6 +138,12 @@ class QueueIsRunning implements Probe
 
     protected function dispatchPendingJob()
     {
+        $this->putCachedJob([
+            'timeDispatched' => time(),
+            'timeHandled'    => null,
+            'threshold'      => time() + $this->maxHandleTime,
+        ]);
+
         if (interface_exists('Illuminate\Contracts\Bus\SelfHandling')) {
             $job = new SelfHandlingQueueIsRunningJob($this->maxHandleTime, $this->cacheKey);
         } else {
@@ -147,12 +153,6 @@ class QueueIsRunning implements Probe
         $job->onConnection($this->connection)->onQueue($this->queue);
 
         $this->dispatch($job);
-
-        $this->putCachedJob([
-            'timeDispatched' => time(),
-            'timeHandled'    => null,
-            'threshold'      => time() + $this->maxHandleTime,
-        ]);
     }
 
     /**
