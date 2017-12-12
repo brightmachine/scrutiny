@@ -121,7 +121,7 @@ Ensure that you always have space available.
 It works by finding the disk related to a given folder and checking its usage. 
 
 ```php
-public availableDiskSpace( number $minPercentage [, string $diskFolder = null ] ): \Scrutiny\ProbeManager
+public availableDiskSpace( number $minPercentage [, string $diskFolder = null ] )
 ```
 
 - `$minPercentage` is the minimum amount of disk space that should be available 
@@ -138,7 +138,7 @@ When a probe is checked, 3 outcomes are possible:
 3. **Passed** – if no exception is thrown    
 
 ```php
-public callback( string $probeName , callable $callback ): \Scrutiny\ProbeManager
+public callback( string $probeName , callable $callback )
 ```
 
 - `$probeName` the name of the probe used to report the results of the check 
@@ -149,7 +149,7 @@ public callback( string $probeName , callable $callback ): \Scrutiny\ProbeManage
 Check that you're able to connect to one of your databases configured on `config/database.php`. 
 
 ```php
-public connectsToDatabase([ string $connectionName = null ]): \Scrutiny\ProbeManager
+public connectsToDatabase([ string $connectionName = null ])
 ```
 
 - `$connectionName` is the name of your database connection from `config/database.php`
@@ -161,7 +161,7 @@ This probe checks that a given URL will return a 2xx response.
 _NB: Redirects will not be followed – only the first response will be considered._ 
 
 ```php
-public connectsToHttp( string $url [, array $params = array(), string $verb = 'GET' ] ): \Scrutiny\ProbeManager
+public connectsToHttp( string $url [, array $params = array(), string $verb = 'GET' ] )
 ```
 
 - `$url` the URL to check, which can contain a username and password, e.g. `https://user@pass:example.com` 
@@ -174,7 +174,7 @@ public connectsToHttp( string $url [, array $params = array(), string $verb = 'G
 This probe will search your path, and your current `vendor/bin` looking for a particular executable. 
 
 ```php
-public executableIsInstalled( string $executableName ): \Scrutiny\ProbeManager
+public executableIsInstalled( string $executableName )
 ```
 
 - `$executableName` the name of the executable to find 
@@ -184,7 +184,7 @@ public executableIsInstalled( string $executableName ): \Scrutiny\ProbeManager
 Check that a particular PHP extension is loaded.
 
 ```php
-public phpExtensionLoaded( string $extensionName ): \Scrutiny\ProbeManager
+public phpExtensionLoaded( string $extensionName )
 ```
 
 - `$extensionName` the name of the PHP extension to check 
@@ -194,7 +194,7 @@ public phpExtensionLoaded( string $extensionName ): \Scrutiny\ProbeManager
 This probe checks that your laravel queue is running.
 
 ```php
-public queueIsRunning( [ int $maxHandleTime = 300, $queue = null, $connection = null ] ): \Scrutiny\ProbeManager
+public queueIsRunning( [ int $maxHandleTime = 300, $queue = null, $connection = null ] )
 ```
 
 - `$maxHandleTime` the maximum time in seconds that you give a job to run on the given queue 
@@ -206,7 +206,30 @@ public queueIsRunning( [ int $maxHandleTime = 300, $queue = null, $connection = 
 Make sure that the artisan schedule is being run. 
 
 ```php
-public scheduleIsRunning(): \Scrutiny\ProbeManager
+public scheduleIsRunning()
+```
+
+----
+
+## Customising the name of your probe
+
+By default, when scrutiny outputs details of your probe (e.g. if it fails, or in the history)
+it guesses a name based on the configuration setting.
+
+If this default name would output sensitive information, such as API keys, then
+you'll want to set the name of the probe.
+
+```php
+public named( string $identifier )
+```
+
+You override the name by calling `->named()` after you set the probe:
+
+```php
+<?php
+\Scrutiny\ProbeManager::configure()
+    ->connectsToHttp('https://api.example.com/me?api_key=12345678900987654321')
+    ->named('example.com API');
 ```
 
 ----
@@ -218,6 +241,14 @@ Configure a new check in pingdom with the following setting:
 1. Add an `uptime check` in pingdom to hit `https://yourdomain.com/~scrutiny/check-probes` where yourdomain.com is your production domain
 2. Scrutiny will return an HTTP status of `590 Some Tests Failed` when something is awry – this is a custom code 
 
+----
+
+## Debugging locally
+
+Your configured probes are rate-limited to 1 check every minute.
+
+This isn't what you want when first setting up your probes, so
+to bypass this locally set `DEBUG=true` in your `.env` file.
 
 ----
 
