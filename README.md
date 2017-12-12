@@ -4,7 +4,7 @@ Scrutiny helps your Laravel 5.1+ project ensure that its current server environm
 
 [![Latest Stable Version](https://poser.pugx.org/brightmachine/scrutiny/v/stable)](https://packagist.org/packages/brightmachine/scrutiny)
 [![Total Downloads](https://poser.pugx.org/brightmachine/scrutiny/downloads)](https://packagist.org/packages/brightmachine/scrutiny)
-[![License](https://poser.pugx.org/brightmachine/scrutiny/license)](https://packagist.org/packages/brightmachine/scrutiny)
+[![License](https://poser.pugx.org/brightmachine/scrutiny/license)](https://github.com/brightmachine/scrutiny/blob/master/LICENSE)
 
 ## Problem
 
