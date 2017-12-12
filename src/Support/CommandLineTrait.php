@@ -2,6 +2,7 @@
 
 namespace Scrutiny\Support;
 
+use Scrutiny\ProbeManager;
 use Scrutiny\ProbeSkippedException;
 use Symfony\Component\Process\ExecutableFinder;
 use Symfony\Component\Process\ProcessUtils;
@@ -17,10 +18,7 @@ trait CommandLineTrait
     {
         $finder = new ExecutableFinder();
 
-        $extraDirs = [
-            base_path(),
-            base_path('vendor/bin'),
-        ];
+        $extraDirs = ProbeManager::extraDirs();
 
         $executable = $finder->find($name, null, $extraDirs);
 

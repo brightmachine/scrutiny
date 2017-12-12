@@ -46,17 +46,10 @@ The installation instructions can be simplified using the following:
 Open `config/app.php` and the scrutiny service provider to :
 
 ```php
-<?php
-return [
+'providers' => [
     // …
-
-    'providers' => [
-        // …
-        Scrutiny\ServiceProvider::class,
-    ],
-	
-	// …
-];
+    Scrutiny\ServiceProvider::class,
+],
 ```
 
 You are all setup – next step it to add your probes!
@@ -108,13 +101,12 @@ class AppServiceProvider extends ServiceProvider
 All probes are added through `\Scrutiny\ProbeManager` and calls can be chained:
 
 ```php
-<?php
 \Scrutiny\ProbeManager::configure()->scheduleIsRunning()->queueIsRunning();
 ```
 
 The following probes are available via `\Scrutiny\ProbeManager::configure()`:
 
-### Available Disk Space
+### `availableDiskSpace()`
 
 Ensure that you always have space available.
 
@@ -127,7 +119,7 @@ public availableDiskSpace( number $minPercentage [, string $diskFolder = null ] 
 - `$minPercentage` is the minimum amount of disk space that should be available 
 - `$diskFolder` the folder used to find the disk. Defaults to the disk storing your laravel app.
 
-### Callback
+### `callback()`
 
 If your use-case isn't supported out-of-the-box you can write your own custom probe.
 
@@ -135,7 +127,7 @@ When a probe is checked, 3 outcomes are possible:
 
 1. **Skipped** – if a `\Scrutiny\ProbeSkippedException` exception is thrown
 2. **Failed** – if any other exception is thrown
-3. **Passed** – if no exception is thrown    
+3. **Passed** – if no exception is thrown
 
 ```php
 public callback( string $probeName , callable $callback )
@@ -144,7 +136,7 @@ public callback( string $probeName , callable $callback )
 - `$probeName` the name of the probe used to report the results of the check 
 - `$callback` the callback that runs your custom check 
 
-### Connects to Database
+### `connectsToDatabase()`
 
 Check that you're able to connect to one of your databases configured on `config/database.php`. 
 
@@ -154,7 +146,7 @@ public connectsToDatabase([ string $connectionName = null ])
 
 - `$connectionName` is the name of your database connection from `config/database.php`
 
-### Connects To Http(s)
+### `connectsToHttp()`
 
 This probe checks that a given URL will return a 2xx response.
 
@@ -169,7 +161,7 @@ public connectsToHttp( string $url [, array $params = array(), string $verb = 'G
 - `$verb` either `GET` or `POST`
 
 
-### Executable is Installed
+### `executableIsInstalled()`
 
 This probe will search your path, and your current `vendor/bin` looking for a particular executable. 
 
@@ -179,7 +171,7 @@ public executableIsInstalled( string $executableName )
 
 - `$executableName` the name of the executable to find 
 
-### PHP Extension is Loaded
+### `phpExtensionLoaded()`
 
 Check that a particular PHP extension is loaded.
 
@@ -189,7 +181,7 @@ public phpExtensionLoaded( string $extensionName )
 
 - `$extensionName` the name of the PHP extension to check 
 
-### Queue is Running
+### `queueIsRunning()`
 
 This probe checks that your laravel queue is running.
 
@@ -201,7 +193,7 @@ public queueIsRunning( [ int $maxHandleTime = 300, $queue = null, $connection = 
 - `$queue` if you run multiple queues on the same connection, this is the name of the queue to check
 - `$connection` if you run multiple connections, this is the one to check as configured in `config/queue.php`
 
-### Schedule is Running
+### `scheduleIsRunning()`
 
 Make sure that the artisan schedule is being run. 
 
@@ -226,7 +218,6 @@ public named( string $identifier )
 You override the name by calling `->named()` after you set the probe:
 
 ```php
-<?php
 \Scrutiny\ProbeManager::configure()
     ->connectsToHttp('https://api.example.com/me?api_key=12345678900987654321')
     ->named('example.com API');
@@ -234,12 +225,23 @@ You override the name by calling `->named()` after you set the probe:
 
 ----
 
-## How to configure pingdom
+## Customising the executable search path
 
-Configure a new check in pingdom with the following setting:
+Certain probes will need to search for a certain executable on disk.
 
-1. Add an `uptime check` in pingdom to hit `https://yourdomain.com/~scrutiny/check-probes` where yourdomain.com is your production domain
-2. Scrutiny will return an HTTP status of `590 Some Tests Failed` when something is awry – this is a custom code 
+By default, scrutiny will search directories in your `$PATH` environment variable
+as well as your `base_path()` and your `vendor/bin`.
+
+_But this isn't always enough._
+
+You can add directories to the path when you configure your probes: 
+
+```php
+\Scrutiny\ProbeManager::extraDirs([
+    '/usr/local/bin/',
+    '/var/www/bin',
+]);
+```
 
 ----
 
@@ -249,6 +251,15 @@ Your configured probes are rate-limited to 1 check every minute.
 
 This isn't what you want when first setting up your probes, so
 to bypass this locally set `DEBUG=true` in your `.env` file.
+
+----
+
+## How to configure pingdom
+
+Configure a new check in pingdom with the following setting:
+
+1. Add an `uptime check` in pingdom to hit `https://yourdomain.com/~scrutiny/check-probes` where yourdomain.com is your production domain
+2. Scrutiny will return an HTTP status of `590 Some Tests Failed` when something is awry – this is a custom code 
 
 ----
 

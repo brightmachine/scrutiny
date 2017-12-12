@@ -13,8 +13,15 @@ use Scrutiny\Probes\ScheduleIsRunning;
 
 class ProbeManager
 {
-    /** @var \Illuminate\Support\Collection  */
+    /**
+     * @var \Illuminate\Support\Collection
+     */
     protected $probes;
+
+    /**
+     * @var string[] an array of additional directories to use when finding executables
+     */
+    protected static $extraDirs = [];
 
     public function __construct()
     {
@@ -162,5 +169,21 @@ class ProbeManager
     {
         $this->probes->last()->name($identifier);
         return $this;
+    }
+
+    /**
+     * @param array|null $dirs
+     * @return array
+     */
+    public static function extraDirs(array $dirs = null)
+    {
+        if (is_array($dirs)) {
+            return static::$extraDirs = $dirs;
+        }
+
+        return array_merge(self::$extraDirs, [
+            base_path(),
+            base_path('vendor/bin'),
+        ]);
     }
 }
