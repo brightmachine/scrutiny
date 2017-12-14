@@ -25,9 +25,10 @@ class CheckProbes
     }
 
     /**
-     * @return CheckProbesResult[]|CheckProbeHistory
+     * @param bool $ignoreCache
+     * @return CheckProbeHistory|CheckProbesResult[]
      */
-    public function handle()
+    public function handle($ignoreCache = false)
     {
         $callback = function () {
             $checks = $this->runChecks();
@@ -35,7 +36,7 @@ class CheckProbes
         };
 
         // no caching if in debug mode
-        if (config('app.debug')) {
+        if (config('app.debug') || $ignoreCache === true) {
             return $callback();
         }
 

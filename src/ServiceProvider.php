@@ -2,6 +2,7 @@
 
 namespace Scrutiny;
 
+use Scrutiny\Console\CheckProbesCommand;
 use Scrutiny\Support\AvailabilityMonitorValidator;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -16,6 +17,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadRoutes();
         $this->configureViews();
         $this->configureCache();
+        $this->registerConsoleCommands();
     }
 
     protected function loadRoutes()
@@ -41,7 +43,16 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             'cache.stores.scrutiny-file' => [
                 'driver' => 'file',
                 'path'   => storage_path('app/scrutiny'),
-            ]
+            ],
         ]);
+    }
+
+    protected function registerConsoleCommands()
+    {
+        if (!$this->app->runningInConsole()) {
+            return;
+        }
+
+        $this->commands(CheckProbesCommand::class);
     }
 }

@@ -254,6 +254,17 @@ to bypass this locally set `DEBUG=true` in your `.env` file.
 
 ----
 
+## Artisan command
+
+Run `php artisan scrutiny:check-probes` to check if your probes are passing.
+
+This command is not rate-limited, so it's a good way to test immediately after making a change,
+or even as part of a deployment process.
+
+The command will return `0` on success and `1` on failure.
+
+----
+
 ## How to configure pingdom
 
 Configure a new check in pingdom with the following setting:
