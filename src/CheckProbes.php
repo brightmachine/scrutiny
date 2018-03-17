@@ -71,15 +71,13 @@ class CheckProbes
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return CheckProbeHistory
      */
     protected function getResultSet()
     {
-        if (!$this->cacheStore->has('resultSet')) {
-            return new CheckProbeHistory();
-        }
+        $resultSet = $this->cacheStore->get('resultSet');
 
-        return $this->cacheStore->get('resultSet');
+        return $resultSet ? $resultSet : new CheckProbeHistory();
     }
 
     protected function addToResultSet(CheckProbesResult $result)
