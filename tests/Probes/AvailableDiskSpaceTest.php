@@ -4,6 +4,7 @@ namespace ScrutinyTest\Probes;
 
 use Scrutiny\Measurements\Percentage;
 use Scrutiny\Probes\AvailableDiskSpace;
+use Scrutiny\ProbeSkippedException;
 use ScrutinyTest\TestCase;
 
 class AvailableDiskSpaceTest extends TestCase
@@ -20,11 +21,12 @@ class AvailableDiskSpaceTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Scrutiny\ProbeSkippedException
-     * @expectedExceptionMessage Unsupported operating system
      */
     public function skipsIfOsNotSupported()
     {
+        $this->expectExceptionMessage("Unsupported operating system");
+        $this->expectException(ProbeSkippedException::class);
+
         $check = new ConfigurableAvailableDiskSpace(10);
         $check->supportedOs = false;
         $check->check();
@@ -32,33 +34,33 @@ class AvailableDiskSpaceTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Scrutiny\ProbeSkippedException
-     * @expectedExceptionMessage Misconfiguration: $minPercentage must be more than 0
      */
     public function skipsIfMinimumPercentageTooLow()
     {
+        $this->expectExceptionMessage('Misconfiguration: $minPercentage must be more than 0');
+        $this->expectException(ProbeSkippedException::class);
         $check = new ConfigurableAvailableDiskSpace(0);
         $check->check();
     }
 
     /**
      * @test
-     * @expectedException \Scrutiny\ProbeSkippedException
-     * @expectedExceptionMessage Misconfiguration: $minPercentage must be less than 100
      */
     public function skipsIfMinimumPercentageTooHigh()
     {
+        $this->expectExceptionMessage('Misconfiguration: $minPercentage must be less than 100');
+        $this->expectException(ProbeSkippedException::class);
         $check = new ConfigurableAvailableDiskSpace(100);
         $check->check();
     }
 
     /**
      * @test
-     * @expectedException \Exception
-     * @expectedExceptionMessage only 15% available, less than minimum of 20%
      */
     public function failsIfAvailablePercentageLowerThanMinimum()
     {
+        $this->expectExceptionMessage("only 15% available, less than minimum of 20%");
+        $this->expectException(\Exception::class);
         $check = new ConfigurableAvailableDiskSpace(20);
         $check->availableDiskSpace = 15;
         $check->check();

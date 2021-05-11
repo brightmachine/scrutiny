@@ -4,7 +4,6 @@
   "description": "Scrutiny checks over your environment to make sure your app is running as it should be – use pingdom to check it",
   "keywords": [
     "laravel",
-    "laravel 5",
     "monitoring",
     "pingdom"
   ],
@@ -26,10 +25,16 @@
       "ScrutinyTest\\": "tests/"
     }
   },
-  "require": {
-    "laravel/framework": "5.1.* || 5.2.* || 5.3.* || 5.4.* || 5.5.*"
-  },
+  "require": {},
   "require-dev": {
-    "orchestra/testbench": "~3.0"
+    "laravel/framework": "8.*",
+    "orchestra/testbench": "~6.0"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Scrutiny\\ServiceProvider::class"
+      ]
+    }
   }
 }

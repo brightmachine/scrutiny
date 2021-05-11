@@ -6,28 +6,29 @@ use Scrutiny\Measurements\Duration;
 use Scrutiny\Probes\QueueIsRunning;
 use Scrutiny\Probes\QueueIsRunning\QueueIsRunningJob;
 use Scrutiny\Probes\ScheduleIsRunning;
+use Scrutiny\ProbeSkippedException;
 use ScrutinyTest\TestCase;
 
 class ScheduleIsRunningTest extends TestCase
 {
     /**
      * @test
-     * @expectedException \Scrutiny\ProbeSkippedException
-     * @expectedExceptionMessage Initiated schedule probe
      */
     public function skipsIfFirstRun()
     {
+        $this->expectExceptionMessage("Initiated schedule probe");
+        $this->expectException(ProbeSkippedException::class);
         $check = new ConfigurableScheduleIsRunning();
         $check->check();
     }
 
     /**
      * @test
-     * @expectedException \Exception
-     * @expectedExceptionMessage has never run
      */
     public function failsIfNothingRecordedSinceFirstRun()
     {
+        $this->expectExceptionMessage("has never run");
+        $this->expectException(\Exception::class);
         $check = new ConfigurableScheduleIsRunning();
         $check->lastRunTime = 0;
         $check->check();
@@ -35,11 +36,11 @@ class ScheduleIsRunningTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Exception
-     * @expectedExceptionMessage last ran at
      */
     public function failsIfScheduleLastRunMoreThan90SecondsAgo()
     {
+        $this->expectExceptionMessage("last ran at");
+        $this->expectException(\Exception::class);
         $check = new ConfigurableScheduleIsRunning();
         $check->lastRunTime = time() - 91;
         $check->check();

@@ -1,6 +1,6 @@
 # Scrutiny
 
-Scrutiny helps your Laravel 5.1+ project ensure that its current server environment is configured and running as planned.
+Scrutiny helps your Laravel 8 project ensure that its current server environment is configured and running as planned.
 
 [![Latest Stable Version](https://poser.pugx.org/brightmachine/scrutiny/v/stable)](https://packagist.org/packages/brightmachine/scrutiny)
 [![Total Downloads](https://poser.pugx.org/brightmachine/scrutiny/downloads)](https://packagist.org/packages/brightmachine/scrutiny)
@@ -28,7 +28,7 @@ To install through composer, add the following to your `composer.json` file:
 ```json
 {
     "require": {
-        "brightmachine/scrutiny": "~1.0"
+        "brightmachine/scrutiny": "~8.0"
     }
 }
 ```
@@ -39,11 +39,11 @@ And then run `composer install` from the terminal.
 
 The installation instructions can be simplified using the following:
 
-    composer require "brightmachine/scrutiny=~1.0"
+    composer require "brightmachine/scrutiny=~8.0"
 
 ### Add the Service Provider
 
-Open `config/app.php` and the scrutiny service provider to :
+Open `config/app.php` and the scrutiny service provider to:
 
 ```php
 'providers' => [

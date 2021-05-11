@@ -2,6 +2,7 @@
 
 namespace ScrutinyTest\Probes;
 
+use Exception;
 use Scrutiny\Probes\ExecutableIsInstalled;
 use Scrutiny\ProbeSkippedException;
 use ScrutinyTest\TestCase;
@@ -19,10 +20,10 @@ class ExecutableIsInstalledTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Exception
      */
     public function failsIfExecutableNotFound()
     {
+        $this->expectException(Exception::class);
         $check = new ConfigurableExecutableIsInstalled('someotherprogram');
         $check->check();
     }

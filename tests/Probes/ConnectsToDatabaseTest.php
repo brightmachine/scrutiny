@@ -2,6 +2,8 @@
 
 namespace ScrutinyTest\Probes;
 
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 use Scrutiny\Probes\ConnectsToDatabase;
 use ScrutinyTest\TestCase;
 
@@ -18,11 +20,14 @@ class ConnectsToDatabaseTest extends TestCase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Database [unknown-db-config] not configured
+     *
+     *
      */
     public function failsIfUnknownDbConnection()
     {
+        $this->expectExceptionMessage("Database connection [unknown-db-config] not configured");
+        $this->expectException(InvalidArgumentException::class);
+
         // `testing` db is set to sqlite in memory
         $check = new ConnectsToDatabase('unknown-db-config');
         $check->check();
@@ -30,12 +35,13 @@ class ConnectsToDatabaseTest extends TestCase
 
     /**
      * @test
-     * @expectedException \PDOException
      */
     public function failsIfCannotConnectToDatabase()
     {
+        $this->expectException(\PDOException::class);
+
         config([
-            'database.mysql.password' => str_random(),
+            'database.mysql.password' => Str::random(),
         ]);
 
         // `mysql` is configured but nothing setup

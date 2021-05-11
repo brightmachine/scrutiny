@@ -9,7 +9,7 @@ cd ${DIR}
 cd ../
 echo "Current directory: $PWD"
 
-declare -a laravel_versions=("5.1" "5.2" "5.3" "5.4" "5.5")
+declare -a laravel_versions=("8.0")
 
 ## now loop through the above array
 for laravel_version in "${laravel_versions[@]}"

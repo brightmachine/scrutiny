@@ -4,3 +4,4 @@ npm-debug.log
 composer.lock
 composer-test.*
 
+/.phpunit.result.cache

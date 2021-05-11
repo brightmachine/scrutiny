@@ -2,6 +2,8 @@
 
 namespace ScrutinyTest\Probes;
 
+use Exception;
+use Illuminate\Support\Str;
 use Scrutiny\Probes\PhpExtensionLoaded;
 use ScrutinyTest\TestCase;
 
@@ -24,13 +26,13 @@ class PhpExtensionLoadedTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Exception
-     * @expectedExceptionMessage extension not loaded
      */
     public function failsIfExtensionNotFound()
     {
+        $this->expectExceptionMessage("extension not loaded");
+        $this->expectException(Exception::class);
         // `testing` db is set to sqlite in memory
-        $check = new PhpExtensionLoaded(str_random(32));
+        $check = new PhpExtensionLoaded(Str::random(32));
         $check->check();
     }
 }

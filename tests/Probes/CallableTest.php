@@ -21,10 +21,10 @@ class CallableTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Scrutiny\ProbeSkippedException
      */
     public function skipsIfCallableThrowsProbeSkippedException()
     {
+        $this->expectException(ProbeSkippedException::class);
         $probe = new Callback('my probe', function () {
             throw new ProbeSkippedException('bling');
         });
@@ -34,10 +34,10 @@ class CallableTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Exception
      */
     public function failsIfCallableThrowsAnyOtherException()
     {
+        $this->expectException(\Exception::class);
         $probe = new Callback('my probe', function () {
             throw new \Exception('bling');
         });

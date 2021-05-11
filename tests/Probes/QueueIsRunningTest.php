@@ -5,39 +5,40 @@ namespace ScrutinyTest\Probes;
 use Scrutiny\Measurements\Duration;
 use Scrutiny\Probes\QueueIsRunning;
 use Scrutiny\Probes\QueueIsRunning\QueueIsRunningJob;
+use Scrutiny\ProbeSkippedException;
 use ScrutinyTest\TestCase;
 
 class QueueIsRunningTest extends TestCase
 {
     /**
      * @test
-     * @expectedException \Scrutiny\ProbeSkippedException
-     * @expectedExceptionMessage Sync queue not supported
      */
     public function skipsIfQueueNotSupported()
     {
+        $this->expectExceptionMessage("Sync queue not supported");
+        $this->expectException(ProbeSkippedException::class);
         $check = new ConfigurableQueueIsRunning(300, null, 'sync');
         $check->check();
     }
 
     /**
      * @test
-     * @expectedException \Scrutiny\ProbeSkippedException
-     * @expectedExceptionMessage Initiated async queue probe
      */
     public function skipsIfFirstRun()
     {
+        $this->expectExceptionMessage("Initiated async queue probe");
+        $this->expectException(ProbeSkippedException::class);
         $check = new ConfigurableQueueIsRunning(300, null, 'database');
         $check->check();
     }
 
     /**
      * @test
-     * @expectedException \Scrutiny\ProbeSkippedException
-     * @expectedExceptionMessage Waiting for test job to complete
      */
     public function skipsIfWeHaveAPendingJobUnderTheThreshold()
     {
+        $this->expectExceptionMessage("Waiting for test job to complete");
+        $this->expectException(ProbeSkippedException::class);
         $check = new ConfigurableQueueIsRunning(300, null, 'database');
         $check->cachedJob = [
             'timeDispatched' => time() - 100,
@@ -49,11 +50,11 @@ class QueueIsRunningTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Scrutiny\MeasurementThresholdException
-     * @expectedExceptionMessage Queue has not processed the test job within the required threshold
      */
     public function failsIfWeHaveAPendingJobAboveTheThreshold()
     {
+        $this->expectExceptionMessage("Queue has not processed the test job within the required threshold");
+        $this->expectException(\Scrutiny\MeasurementThresholdException::class);
         $check = new ConfigurableQueueIsRunning(300, null, 'database');
         $check->cachedJob = [
             'timeDispatched' => time() - 400,
@@ -66,11 +67,11 @@ class QueueIsRunningTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Scrutiny\MeasurementThresholdException
-     * @expectedExceptionMessage Test job took too long to be processed
      */
     public function failsIfCompletedJobAboveTheThreshold()
     {
+        $this->expectExceptionMessage("Test job took too long to be processed");
+        $this->expectException(\Scrutiny\MeasurementThresholdException::class);
         $check = new ConfigurableQueueIsRunning(300, null, 'database');
         $check->cachedJob = [
             'timeDispatched' => time() - 400,

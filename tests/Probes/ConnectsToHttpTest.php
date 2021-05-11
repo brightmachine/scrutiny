@@ -2,7 +2,9 @@
 
 namespace ScrutinyTest\Probes;
 
+use Exception;
 use Scrutiny\Probes\ConnectsToHttp;
+use Scrutiny\ProbeSkippedException;
 use ScrutinyTest\TestCase;
 
 /**
@@ -28,10 +30,10 @@ class ConnectsToHttpTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Scrutiny\ProbeSkippedException
      */
     public function skipsIfNotNumericHttpStatusCodeReturned()
     {
+        $this->expectException(ProbeSkippedException::class);
         $check = new ConfigurableConnectsToHttp('https://example.com');
         $check->httpStatusCode = 'text';
         $check->check();
@@ -39,10 +41,10 @@ class ConnectsToHttpTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Scrutiny\ProbeSkippedException
      */
     public function skipsIfHttpStatusCodeBelowExpectedRange()
     {
+        $this->expectException(ProbeSkippedException::class);
         $check = new ConfigurableConnectsToHttp('http://example.com');
         $check->httpStatusCode = 99;
         $check->check();
@@ -50,10 +52,10 @@ class ConnectsToHttpTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Scrutiny\ProbeSkippedException
      */
     public function skipsIfHttpStatusCodeAboveExpectedRange()
     {
+        $this->expectException(ProbeSkippedException::class);
         $check = new ConfigurableConnectsToHttp('http://example.com');
         $check->httpStatusCode = 600;
         $check->check();
@@ -61,30 +63,30 @@ class ConnectsToHttpTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Exception
      */
     public function failsOn3xxResponse()
     {
+        $this->expectException(Exception::class);
         $check = new ConnectsToHttp('http://get.httpstatus.io/302');
         $check->check();
     }
 
     /**
      * @test
-     * @expectedException \Exception
      */
     public function failsOn4xxResponse()
     {
+        $this->expectException(Exception::class);
         $check = new ConnectsToHttp('http://get.httpstatus.io/404');
         $check->check();
     }
 
     /**
      * @test
-     * @expectedException \Exception
      */
     public function failsOn5xxResponse()
     {
+        $this->expectException(Exception::class);
         $check = new ConnectsToHttp('http://get.httpstatus.io/500');
         $check->check();
     }

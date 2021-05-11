@@ -2,6 +2,7 @@
 
 namespace Scrutiny\Probes;
 
+use Illuminate\Support\Arr;
 use Scrutiny\Probe;
 use Scrutiny\ProbeSkippedException;
 
@@ -114,7 +115,7 @@ class ConnectsToHttp implements Probe
 
         $metaData = stream_get_meta_data($fp);
 
-        $httpResponse = collect(array_get($metaData, 'wrapper_data'))
+        $httpResponse = collect(Arr::get($metaData, 'wrapper_data'))
             ->first(function ($v, $k) {
                 if (str_contains("$k $v", 'HTTP/')) {
                     return true;
