@@ -41,17 +41,6 @@ The installation instructions can be simplified using the following:
 
     composer require "brightmachine/scrutiny=~8.0"
 
-### Add the Service Provider
-
-Open `config/app.php` and the scrutiny service provider to:
-
-```php
-'providers' => [
-    // …
-    Scrutiny\ServiceProvider::class,
-],
-```
-
 You are all setup – next step it to add your probes!
 
 ## How it works

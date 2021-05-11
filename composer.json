@@ -33,7 +33,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Scrutiny\\ServiceProvider::class"
+        "Scrutiny\\ServiceProvider"
       ]
     }
   }
