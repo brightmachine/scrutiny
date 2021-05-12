@@ -1,4 +1,4 @@
-<?php $id = str_random(10); ?>
+<?php $id = \Illuminate\Support\Str::random(10); ?>
 <script type="text/javascript">
     google.charts.load("current", {packages: ["timeline"]});
     google.charts.setOnLoadCallback(function() {

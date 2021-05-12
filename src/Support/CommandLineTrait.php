@@ -28,13 +28,4 @@ trait CommandLineTrait
 
         return $executable;
     }
-
-    /**
-     * @param string $arg
-     * @return string
-     */
-    protected function escapeShellArgument($arg)
-    {
-        return ProcessUtils::escapeArgument($arg);
-    }
 }

@@ -30,7 +30,7 @@ class CheckProbeHistory extends Collection
     public function withMeasurements()
     {
         return $this->reject(function ($v) {
-            return !array_get($v, 'measurement');
+            return !Arr::get($v, 'measurement');
         });
     }
 

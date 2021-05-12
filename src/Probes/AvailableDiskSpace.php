@@ -7,6 +7,7 @@ use Scrutiny\MeasurementThresholdException;
 use Scrutiny\Probe;
 use Scrutiny\ProbeSkippedException;
 use Scrutiny\Support\CommandLineTrait;
+use Symfony\Component\Process\Process;
 
 class AvailableDiskSpace implements Probe
 {
@@ -109,15 +110,21 @@ class AvailableDiskSpace implements Probe
 
     protected function getAvailableDiskSpace()
     {
-        $command = sprintf('%s -k %s -P | %s -vi filesystem',
-            $this->escapeShellArgument($this->findExecutable('df')),
-            $this->escapeShellArgument($this->diskFolder),
-            $this->escapeShellArgument($this->findExecutable('grep'))
-        );
+        $process = new Process([
+            $this->findExecutable('df'),
+            '-k',
+            $this->diskFolder,
+            '-P',
+            '|',
+            $this->findExecutable('grep'),
+            ' -vi filesystem'
+        ]);
 
-        exec($command, $output);
+        $process->run();
+        $output = $process->getOutput();
+        $outputLine2 = preg_split('/[\r\n|\n|\r]/', $output)[1];
 
-        $cols = preg_split('/\s+/', $output[0]);
+        $cols = preg_split('/\s+/', $outputLine2);
         $used = (int)$cols[4];
 
         return 100 - $used;

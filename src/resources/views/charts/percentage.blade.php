@@ -1,4 +1,4 @@
-<?php $id = str_random(10); $history = $history->withMeasurements(); ?>
+<?php $id = \Illuminate\Support\Str::random(10); $history = $history->withMeasurements(); ?>
 <script type="text/javascript">
     google.charts.load("current", {packages: ["corechart"]});
     google.charts.setOnLoadCallback(function() {
