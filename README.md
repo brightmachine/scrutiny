@@ -28,18 +28,18 @@ To install through composer, add the following to your `composer.json` file:
 ```json
 {
     "require": {
-        "brightmachine/scrutiny": "~8.0"
+        "brightmachine/scrutiny": "~2.0"
     }
 }
 ```
 
-And then run `composer install` from the terminal.
+Then run `composer install` from the terminal.
 
 ### Quick Installation
 
 The installation instructions can be simplified using the following:
 
-    composer require "brightmachine/scrutiny=~8.0"
+    composer require "brightmachine/scrutiny=~2.0"
 
 You are all setup – next step it to add your probes!
 
