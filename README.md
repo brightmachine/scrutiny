@@ -15,8 +15,8 @@ Have you ever been in the situation where you've moved servers and forgotten to:
 3. Install an obscure program that your reporting uses once a month?
 4. Enable a PHP extension that you need for an API?
 
-This is the scenario Scrutiny was built to address – use the availability monitor you have setup 
-(like pingdom) to also monitor other important aspects of your environment.
+This is the scenario Scrutiny was built to address – use the availability monitor you already use 
+(like [Oh Dear](https://ohdear.app/) or Pingdom) to also monitor other important aspects of your environment.
 
 This means your availability monitor notifies you of any problems with your server environment setup
 instead of waiting for your clients or customers to tell you something is wrong.
@@ -46,7 +46,7 @@ You are all setup – next step it to add your probes!
 ## How it works
 
 1. In `AppServiceProvider::boot()`, configure the probes to check for all the things your environment needs in order to run 
-2. Set up an `uptime check` in Pingdom to alert you if any of the probes fail to pass 
+2. Set up an `uptime check` in [Oh Dear](https://ohdear.app/) or Pingdom to alert you if any of the probes fail to pass 
 
 ----
 
@@ -251,6 +251,15 @@ This command is not rate-limited, so it's a good way to test immediately after m
 or even as part of a deployment process.
 
 The command will return `0` on success and `1` on failure.
+
+----
+
+## How to configure Oh Dear
+
+Configure a new site in [Oh Dear](https://ohdear.app/) with the following setting:
+
+1. In `Settings` (the `General` tab), point to the scrutiny URL for your domain `yourdomain.com/~scrutiny/check-probes` where yourdomain.com is your production domain
+2. Scrutiny will return an HTTP status of `590 Some Tests Failed` when something is awry – this is a custom code 
 
 ----
 

@@ -1,11 +1,13 @@
 {
   "name": "brightmachine/scrutiny",
   "type": "library",
-  "description": "Scrutiny checks over your environment to make sure your app is running as it should be – use pingdom to check it",
+  "description": "Scrutiny checks over your environment to make sure your app is running as it should be – use Oh Dear or Pingdom to check it",
   "keywords": [
     "laravel",
     "monitoring",
-    "pingdom"
+    "pingdom",
+    "Oh Dear",
+    "ohdear"
   ],
   "homepage": "https://github.com/brightmachine/scrutiny",
   "license": "MIT",
